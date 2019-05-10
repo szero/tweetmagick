@@ -32,7 +32,7 @@ setup(
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "License :: OSI Approved :: ISC License (ISCL)",
-        "Operating System :: Unix-like",
+        "Operating System :: Unix",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

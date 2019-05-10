@@ -38,6 +38,7 @@ Below is the code that will save your image to a file:
             copyfileobj(tg.tweetgen(), tweet)
 
 Results in :
+
 .. image:: haroldtweets.png
     :align: left
 

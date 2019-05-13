@@ -42,11 +42,11 @@ Results in :
 .. image:: haroldtweets.png
     :align: left
 
+
 With ``dark`` theme option:
 
 .. image:: haroldtweetsduringnight.png
     :align: left
-
 
 
 TODO

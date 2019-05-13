@@ -33,7 +33,7 @@ Below is the code that will save your image to a file:
 
     from shutil import copyfileobj
 
-    with TweetGenerator(name, longname, avatar, text) as tg:
+    with TweetGenerator(name, longname, avatar, text, theme="light") as tg:
         with open("haroldtweets.png", "wb") as tweet:
             copyfileobj(tg.tweetgen(), tweet)
 
@@ -41,6 +41,12 @@ Results in :
 
 .. image:: haroldtweets.png
     :align: left
+
+With ``dark`` theme option:
+
+.. image:: haroldtweetsduringnight.png
+    :align: left
+
 
 
 TODO

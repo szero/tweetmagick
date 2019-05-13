@@ -4,26 +4,43 @@
 from io import BytesIO
 from textwrap import wrap, shorten
 from pathlib import Path
+from configparser import ConfigParser
 
 from wand.image import Image
 from wand.drawing import Drawing
 from wand.color import Color
 from wand.display import display
 
+from .themes import light_theme, dark_theme
 
-__version__ = "0.1"
+
+__version__ = "0.2"
 
 
 class TweetGenerator:
-    def __init__(self, name, longname, avatar, text):
+    def __init__(self, name, handle, avatar, text, theme=None):
         self.name = name
-        self.longname = longname
+        self.handle = handle
         self.avatar = avatar
         self.text = text
         self.filename = f"{self.name} on Twitter: {self.shorten_text(text)}.png"
         self.text = "\n".join(wrap(self.text, width=90))
         self._instance_bin = set()
         self.edgefontpath = str(Path(__file__).parent / "font/edge-icons-Regular.ttf")
+        if theme == "light" or not theme:
+            self.theme = light_theme["tweetmagick_theme"]
+        elif theme == "dark":
+            self.theme = dark_theme["tweetmagick_theme"]
+        elif isinstance(theme, str):
+            cfg_path = Path(theme)
+            if not cfg_path.exists():
+                raise ValueError(f"{cfg_path}: This path doesn't exist.")
+            cfg = ConfigParser()
+            cfg.read(str(cfg_path))
+            cfg["DEFAULT"] = light_theme["DEFAULT"]
+            self.theme = cfg["tweetmagick_theme"]
+        else:
+            raise ValueError(f"{theme}: Invalid theme value.")
 
     def __enter__(self):
         return self
@@ -40,19 +57,36 @@ class TweetGenerator:
 
     def tweetgen(self, verified=False, debug=False):
         avatar = self.create_circular_image(self.avatar)
-        reply = self.create_icon("\uf151", fg="#657786", bg="transparent", size=20)
-        retweet = self.create_icon("\uf152", fg="#657786", bg="transparent", size=20)
+        reply = self.create_icon(
+            "\uf151", fg=self.theme["icon_color"], bg="transparent", size=20
+        )
+        retweet = self.create_icon(
+            "\uf152", fg=self.theme["icon_color"], bg="transparent", size=20
+        )
         if verified:
             verified = self.create_icon(
-                "\uF099", fg="#1da1f2", bg="transparent", size=16
+                "\uF099",
+                fg=self.theme["verified_icon_color"],
+                bg="transparent",
+                size=16,
             )
-        like = self.create_icon("\uf148", fg="#657786", bg="transparent", size=20)
-        name = self.create_text(self.name, fg="#14171a", bg="transparent", weight=600)
-        longname = self.create_text(f"@{self.longname}", fg="#657786", bg="transparent")
-        text = self.create_text(self.text, fg="#14171a", bg="white")
+        like = self.create_icon(
+            "\uf148", fg=self.theme["icon_color"], bg="transparent", size=20
+        )
+        name = self.create_text(
+            self.name, fg=self.theme["name_color"], bg="transparent", weight=600
+        )
+        handle = self.create_text(
+            f"@{self.handle}", fg=self.theme["handle_color"], bg="transparent"
+        )
+        text = self.create_text(
+            self.text, fg=self.theme["text_color"], bg="transparent"
+        )
         twidth, theight = text.width, text.height
         twidth = twidth + 130 if twidth > 200 else 330
-        with Image(width=twidth, height=150, background=Color("white")) as tweet:
+        with Image(
+            width=twidth, height=150, background=Color(self.theme["background_color"])
+        ) as tweet:
             tweet.format = "png"
             tweet.composite(avatar, left=10, top=20)
             tweet.composite(name, left=120, top=20)
@@ -60,7 +94,7 @@ class TweetGenerator:
             if verified:
                 name_header = 138
                 tweet.composite(verified, left=name.width + 120, top=20)
-            tweet.composite(longname, left=name.width + name_header, top=21)
+            tweet.composite(handle, left=name.width + name_header, top=21)
             tweet.composite(text, left=120, top=42)
             button_height = theight + 50
             tweet.composite(reply, left=120, top=button_height)

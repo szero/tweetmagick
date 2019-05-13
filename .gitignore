@@ -55,3 +55,6 @@ target/
 
 # Vim Session
 Session.vim
+
+# virtualenv dir
+tweetmagickenv/

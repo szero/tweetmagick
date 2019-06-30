@@ -10,7 +10,6 @@ light_theme["tweetmagick_theme"] = {
     "verified_icon_color": "#1da1f2",
     "background_color": "#ffffff",
 }
-light_theme["DEFAULT"] = light_theme["tweetmagick_theme"]
 
 dark_theme = ConfigParser()
 dark_theme["tweetmagick_theme"] = {

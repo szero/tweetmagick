@@ -14,7 +14,7 @@ from wand.display import display
 from .themes import light_theme, dark_theme
 
 
-__version__ = "0.2"
+__version__ = "0.2.1"
 
 
 class TweetGenerator:
@@ -37,7 +37,7 @@ class TweetGenerator:
                 raise ValueError(f"{cfg_path}: This path doesn't exist.")
             cfg = ConfigParser()
             cfg.read(str(cfg_path))
-            cfg["DEFAULT"] = light_theme["DEFAULT"]
+            cfg["DEFAULT"] = light_theme["tweetmagick_theme"]
             self.theme = cfg["tweetmagick_theme"]
         else:
             raise ValueError(f"{theme}: Invalid theme value.")

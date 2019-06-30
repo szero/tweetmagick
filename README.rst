@@ -12,6 +12,7 @@ Installation
 Examples
 --------
 
+Displaying the image and quitting without saving it can be done like so:
 
 .. code-block:: python
 
@@ -24,7 +25,6 @@ Examples
     with TweetGenerator(name, longname, avatar, text) as tg:
         tg.tweetgen(debug=True)
 
-Code above will display the image and exit without saving it.
 
 ``tweetgen`` method returns BytesIO object with png binary blob.
 Below is the code that will save your image to a file:
